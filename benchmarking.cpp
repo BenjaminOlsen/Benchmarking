@@ -37,6 +37,7 @@ int main()
     
     strVec.resize(iterations);
 
+    std::cout << "making test data... " << std::endl;
     for(size_t k = 0; k < strVec.size(); ++k) {
         strVec[k] = Benchmarking::makeRandomString(strlen);
     }
@@ -46,7 +47,7 @@ int main()
         std::cout << "~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
         std::cout << "running benchmark for " << funcTable[idx].name << std::endl;
 
-        const int warmUpIterations = 10; // Or however many iterations you deem necessary
+        const int warmUpIterations = 10;
 
         // Warm-up phase
         for (int i = 0; i < warmUpIterations; ++i) {

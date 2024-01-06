@@ -1,12 +1,14 @@
 #include <string>
 #include <vector>
+#include <stack>
 #include <unordered_map>
+#include <iostream>
 
 #include "leet.hpp"
 
 #define MAX(X,Y)  (((X)>(Y))?(X):(Y))
 // -------------------------------------------------------------------------------------------------
-int Leet::lengthOfLongestSubstring1::solution(std::string s) {
+int Leet::lengthOfLongestSubstring::solution1(std::string s) {
     std::vector<int> chars(128);
 
     int left = 0;
@@ -34,7 +36,7 @@ int Leet::lengthOfLongestSubstring1::solution(std::string s) {
 
 
 // -------------------------------------------------------------------------------------------------
-int Leet::lengthOfLongestSubstring2::solution(std::string s) {
+int Leet::lengthOfLongestSubstring::solution2(std::string s) {
     int i = 0; //left index
     int j = 0; //right index
     int cnt = 0; // count of the current max valid string length
@@ -71,7 +73,7 @@ int Leet::lengthOfLongestSubstring2::solution(std::string s) {
 
 
 // -------------------------------------------------------------------------------------------------
-int Leet::lengthOfLongestSubstring3::solution(std::string s) {
+int Leet::lengthOfLongestSubstring::solution3(std::string s) {
     std::vector<int> chars(128);
     //this vector is really a map between the ascii value of the char and its last index in the string
 
@@ -103,4 +105,129 @@ int Leet::lengthOfLongestSubstring3::solution(std::string s) {
     }
 
     return cnt;
+}
+
+template<typename T>
+void printStack(std::stack<T> s) {
+    while (!s.empty()) {
+        T el = s.top();
+        s.pop();
+        std::cout << el << ',';
+    }
+    std::cout << std::endl;
+}
+// -------------------------------------------------------------------------------------------------
+int Leet::longestValidParentheses::solution1(std::string s) {
+    //"((((((()()()()()()()()()()())))))))))))()()()()((((())()()()()()()()()()()()()()()()()()()()
+    
+    size_t n = s.size();
+    //std::cout << s << std::endl;
+    int longest = 0;
+    std::stack<size_t> stack;
+
+    for (size_t k = 0; k < s.size(); k++) {
+        char c = s[k];
+        //printf("s[%lu] = %c\n", k, c);
+        if (c == '(') {
+            stack.push(k);
+            //printStack(stack);
+        }
+        else { // c==')'
+            if (!stack.empty()) { 
+                //printf("s[stack.top()]: %c\n", s[stack.top()]);
+                if (s[stack.top()] == '(') {
+                    stack.pop();
+                }
+                else {
+                    stack.push(k);
+                }
+            }
+            else {
+                //printf("push %d\n",int(k));
+                stack.push(k);
+            }
+            //printStack(stack);
+            
+        }
+    }
+    //now, the stack only contains the indices that do NOT correspond to a valid parenthesis string, 
+    //so we can calculate the biggest gap between the indices by scanning through 
+    if (stack.empty()) {
+        longest = n;
+    }
+    else {
+        int begin = 0;
+        int end = n;
+
+        while (!stack.empty()) {
+            begin = stack.top();
+            stack.pop();
+            longest = std::max((end-begin-1), longest);
+            //for (int k = begin; k < end; k++) { std::cout << s[k]; }
+            //std::cout << ", end: " << end << ", begin: " << begin << ", longest: " << longest << ", stack.size(): " << stack.size() << std::endl;
+            end = begin; //the end for the next iter is the beginning of this one
+        }
+        // for the 0 index case
+        longest = std::max(longest, end);
+    }
+    //printf("str: \"%s\" (len %lu) - longest:  %d\n", s.c_str(), s.size(), longest);
+    return longest;
+
+}
+
+// -------------------------------------------------------------------------------------------------
+int Leet::longestValidParentheses::solution2(std::string s) {
+    std::stack<int> st;
+    st.push(-1);
+    int len_max = 0;
+    for(int i = 0; i < s.size(); i++){
+        if(s[i] == '('){
+            st.push(i);
+        }
+        else{
+            st.pop();
+            if(st.empty()){
+                st.push(i);
+            }
+            else {
+                int len = i - st.top();
+                len_max = std::max(len, len_max);
+            }
+        }
+        
+    }
+    return len_max;
+}
+
+// -------------------------------------------------------------------------------------------------
+int Leet::longestValidParentheses::solution3(std::string s){
+    if (s.size() < 2) {
+        return 0;
+    }
+
+    int maxValid = 0;
+    int* layerMaxLength = new int[s.size()]{};  //stores the longest valid substring ending at each position 
+    int curLayer = -1;
+
+    // keep track of the current "layer", or "depth" of the open parentheses
+    for (char& c : s) {
+        if (c == '(') {
+            curLayer++; //increase current layer
+        } 
+        else if (curLayer >= 0) { // if we're inside an open parenthesis,
+            //increase the current max length by 2, including the length of any sequence
+            //contained within, i.e. in one layer deeper.
+            layerMaxLength[curLayer] += layerMaxLength[curLayer + 1] + 2; 
+            // as the current layer is now closed, the contained layer is counted in curLayer
+            layerMaxLength[curLayer + 1] = 0;
+
+            maxValid = std::max(layerMaxLength[curLayer], maxValid); // update max
+
+            curLayer--; // go up one layer
+        } 
+        else { // curLayer never increased, there has been no valid substring
+            layerMaxLength[0] = 0;
+        }
+    }
+    return maxValid;
 }

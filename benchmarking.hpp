@@ -32,9 +32,8 @@ void makeRandomArray(std::vector<T> &arr)
 } 
 
 // -------------------------------------------------------------------------------------------------
-std::string makeRandomString(size_t length)
+std::string makeRandomString(size_t length, const std::string characters="abcdefghijklmnopqrstuvwxyz")
 {
-    const std::string characters = "abcdefghijklmnopqrstuvwxyz";
     std::default_random_engine randomEngine(static_cast<unsigned int>(std::time(nullptr)));
     std::uniform_int_distribution<size_t> distribution(0, characters.size() - 1);
     std::string randomString;

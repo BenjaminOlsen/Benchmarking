@@ -5,7 +5,7 @@ CXXFLAGS = -Wall -std=c++11
 # Project files
 SOURCES = leet.cpp benchmarking.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
-EXECUTABLE = myprogram
+EXECUTABLE = benchmarking
 
 # The first rule is the one executed when no parameters are fed into the makefile
 all: $(EXECUTABLE)

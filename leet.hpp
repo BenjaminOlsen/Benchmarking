@@ -3,21 +3,19 @@
 
 namespace Leet {
     // -------------------------------------------------------------------------------------------------
-    class lengthOfLongestSubstring1 {
+    class lengthOfLongestSubstring {
     public:
-        static int solution(std::string s);
+        static int solution1(std::string s);
+        static int solution2(std::string s);
+        static int solution3(std::string s);
     };
 
     // -------------------------------------------------------------------------------------------------
-    class lengthOfLongestSubstring2 {
+    class longestValidParentheses {
     public:
-        static int solution(std::string s);
-    };
-
-    // -------------------------------------------------------------------------------------------------
-    class lengthOfLongestSubstring3 {
-    public:
-        static int solution(std::string s);
+        static int solution1(std::string s);
+        static int solution2(std::string s);
+        static int solution3(std::string s);
     };
 }
 #endif

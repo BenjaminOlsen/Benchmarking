@@ -21,14 +21,12 @@ struct FuncEntry {
 
 // -------------------------------------------------------------------------------------------------
 template <typename T>
-void makeRandomArray(std::vector<T> &arr)
+void makeRandomVec(std::vector<T> &vec, int inputMax = INT_MAX)
 {
-    for (int k = 0; k < arr.size(); ++k)
+    for (int k = 0; k < vec.size(); ++k)
     {
-        arr[k] = T( (rand()) % INPUT_MAX + 1);
+        vec[k] = T( (rand()) % inputMax + 1);
     }
-    
-    std::cout << "made random array: arr[0]: " << arr[0] << std::endl;
 } 
 
 // -------------------------------------------------------------------------------------------------

@@ -2,6 +2,7 @@
 #include <vector>
 #include <stack>
 #include <unordered_map>
+#include <unordered_set>
 #include <iostream>
 
 #include "leet.hpp"
@@ -230,4 +231,57 @@ int Leet::longestValidParentheses::solution3(std::string s){
         }
     }
     return maxValid;
+}
+
+// -------------------------------------------------------------------------------------------------
+std::vector< std::vector<int> > Leet::findMatrix::solution1(std::vector<int>& nums) { 
+    std::cout << "solution1; input length: "<< nums.size() << std::endl;
+    
+    if (nums.size() == 0) {
+        return std::vector<std::vector<int>>();
+    }
+
+    
+    std::vector<std::unordered_set<int>> rowSets(nums.size());
+    std::vector<std::vector<int>> resVec(1);
+
+    // for each number in nums, put it in the lowest row such that it doesn't repeat
+    for (int n : nums) {
+        for (int rowIdx = 0; rowIdx < rowSets.size(); ++rowIdx){
+            //put it in the first row that you find that does not contain it
+            //printf("---------\nrowIdx: %d; n: %d\n", rowIdx, n);
+            if (rowSets[rowIdx].find(n) == rowSets[rowIdx].end()) {
+                //printf("inserting %d in row %d\n", n, rowIdx);
+                rowSets[rowIdx].insert(n);
+                resVec[rowIdx].push_back(n);
+                break;
+            }
+            else if (rowIdx == resVec.size()-1) { //if it's the last row in the vec already, make a new row
+                //printf("making a new row beyond %d for %d\n", rowIdx, n);
+                resVec.push_back(std::vector<int>());
+                //rowSets[rowIdx].insert(n);
+            }
+            else {
+                //printf("%d already in row %d\n", n, rowIdx);
+            }
+        }
+    }
+    return resVec;
+}
+
+
+// -------------------------------------------------------------------------------------------------
+std::vector< std::vector<int> > Leet::findMatrix::solution2(std::vector<int>& nums) { 
+    std::vector<int> freq(nums.size()+1);
+    std::vector<std::vector<int>> res;
+
+    std::cout << "solution2; input length: "<< nums.size() << std::endl;
+
+    for (auto i : nums)
+    {
+        if (freq[i] >= res.size()) res.push_back({});
+        res[freq[i]].push_back(i);
+        freq[i]++;
+    }
+    return res; 
 }
